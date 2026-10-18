@@ -96,7 +96,7 @@ table{width:100%;border-collapse:collapse;margin-top:10px}td,th{text-align:right
 <p class="fine">Yatırım tavsiyesi değildir. Girdiklerin bu tarayıcıda saklanır; bağlantıyı kopyalarsan tutarların bağlantının içinde olur, kimseyle paylaşma. Gram altın, ons fiyatından hesaplanır, Midas fiyatından küçük sapma olabilir.</p>
 </main>
 <script>
-const WORKER=''; // Cloudflare Worker adresini buraya yaz (isteğe bağlı, anlık fiyat için)
+const WORKER='https://fiyat.esatcimx.workers.dev'; // Cloudflare Worker adresini buraya yaz (isteğe bağlı, anlık fiyat için)
 const $=s=>document.querySelector(s);
 const fm=(n,d=0)=>(+n).toLocaleString('tr-TR',{maximumFractionDigits:d,minimumFractionDigits:d});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
