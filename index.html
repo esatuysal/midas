@@ -1,101 +1,107 @@
 <!doctype html>
 <html lang="tr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Midas hedef takibi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<title>Esat’ın portföyü</title>
 <style>
-:root{--bg:#eef1f4;--card:#fff;--ink:#14202b;--mut:#5b6b79;--line:#d5dce2;--acc:#0e5a7a;--gold:#a87a1f;--ok:#2f7d4f;--bad:#b23a48;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1820;--card:#17232d;--ink:#e6edf2;--mut:#93a4b2;--line:#273843;--acc:#5fb4d6;--gold:#d9a73b;--ok:#5cc58a;--bad:#e8798a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0f1820;--card:#17232d;--ink:#e6edf2;--mut:#93a4b2;--line:#273843;--acc:#5fb4d6;--gold:#d9a73b;--ok:#5cc58a;--bad:#e8798a;color-scheme:dark}
+:root{--bg:#eef1f4;--card:#fff;--ink:#14202b;--mut:#5b6b79;--line:#d5dce2;--acc:#0e5a7a;--gold:#c4912a;--cash:#7a8b99;--ok:#2f7d4f;--bad:#b23a48;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1820;--card:#17232d;--ink:#e6edf2;--mut:#93a4b2;--line:#273843;--acc:#5fb4d6;--gold:#d9a73b;--cash:#8fa3b2;--ok:#5cc58a;--bad:#e8798a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1820;--card:#17232d;--ink:#e6edf2;--mut:#93a4b2;--line:#273843;--acc:#5fb4d6;--gold:#d9a73b;--cash:#8fa3b2;--ok:#5cc58a;--bad:#e8798a;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{max-width:760px;margin:0 auto;padding:24px 16px 48px}
-h1{font-size:clamp(1.5rem,5vw,2.1rem);line-height:1.2;margin:0 0 16px;font-weight:600}
-h2{font-size:1.05rem;margin:32px 0 10px;font-weight:600}
-.track{position:relative;height:18px;background:var(--line);border-radius:9px;overflow:hidden}
-.fill{height:100%;background:var(--acc);width:0;transition:width .4s}
-.sub{color:var(--mut);margin:10px 0 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:0;font-weight:600}
+.sub{color:var(--mut);margin:6px 0 0}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:20px 0}
+.tabs button{font:inherit;cursor:pointer;background:none;border:0;border-bottom:3px solid transparent;color:var(--mut);padding:8px 12px}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.panel[hidden]{display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
 label{display:flex;flex-direction:column;font-size:.85rem;color:var(--mut);gap:4px}
 input{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;box-sizing:border-box}
-input:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-button{font:inherit;cursor:pointer;border:1px solid var(--acc);background:transparent;color:var(--acc);border-radius:6px;padding:7px 12px;margin:0 8px 8px 0}
-.need{border-left:4px solid var(--gold);padding:4px 12px;margin:16px 0}
-.warn{color:var(--bad)}
+svg{display:block;width:min(100%,300px);margin:8px auto}
 .scroll{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:420px}
+table{border-collapse:collapse;width:100%;min-width:380px}
 th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
 th:first-child,td:first-child{text-align:left}
 th{color:var(--mut);font-weight:400;font-size:.85rem}
-.note{color:var(--mut);font-size:.85rem;margin-top:28px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.note{border-left:4px solid var(--gold);padding:4px 12px;margin:14px 0}
+.warn{color:var(--bad)}
+.news a{color:var(--ink);text-decoration:none;font-weight:600}
+.news a:hover{text-decoration:underline}
+.news div{padding:9px 0;border-bottom:1px solid var(--line)}
+.fine{color:var(--mut);font-size:.85rem;margin-top:28px}
 </style></head><body><main>
-<h1 id="head"></h1>
-<div class="track" role="img" aria-label="Hedefe ilerleme"><div class="fill" id="fill"></div></div>
-<p class="sub" id="gap"></p>
-<div class="need" id="need"></div>
+<h1>Esat’ın portföyü</h1>
+<p class="sub">Elindekini gir, halka ona göre şekillensin.</p>
+<div class="tabs" role="tablist">
+<button role="tab" data-t="p1" aria-selected="true">Dağılım</button>
+<button role="tab" data-t="p2" aria-selected="false">Alım-satım</button>
+<button role="tab" data-t="p3" aria-selected="false">Haberler</button>
+</div>
 
-<h2>Piyasa</h2>
-<div class="grid" id="mkt"><span class="sub">Yükleniyor…</span></div>
+<section class="panel" id="p1">
+<div class="grid" id="hin"></div>
+<svg id="ring" viewBox="0 0 200 200" role="img" aria-label="Dağılım halkası: dış halka hedef, iç halka mevcut"></svg>
+<p class="sub" style="text-align:center">Dış halka hedef, iç halka şu anki dağılımın.</p>
+<h3>Hedeflenen dağılım (%)</h3>
+<div class="grid" id="tin"></div>
+<p class="warn" id="tw"></p>
+<div class="scroll"><table><thead><tr><th>Varlık</th><th>Şu an</th><th>Hedef</th><th>Hedefe fark</th></tr></thead><tbody id="legend"></tbody></table></div>
+<p class="sub">Fark: hedefe ulaşmak için bu varlığa eklenecek (+) ya da fazla olan (−) tutar.</p>
+</section>
+
+<section class="panel" id="p2" hidden>
+<h3>Uyarılar</h3>
+<div class="note" id="sig">Yükleniyor…</div>
+<h3>Piyasa</h3>
+<div class="grid" id="mkt"></div>
 <p class="sub" id="upd"></p>
-<div class="need" id="alerts"></div>
+<p class="sub">Bunlar tahmin değil, senin kurallarının hatırlatması: altın 30 günlük zirveden %5, S&amp;P 500 ve Nasdaq 52 haftalık zirveden %10 düşünce alım bölgesi; hedeften 5 puan sapınca dengeleme.</p>
+</section>
 
-<h2>Varsayımlar</h2>
-<div class="grid" id="inputs"></div>
+<section class="panel" id="p3" hidden>
+<h3>Paranın yönünü etkileyebilecek başlıklar</h3>
+<div class="news" id="news">Yükleniyor…</div>
+<p class="sub">Faiz, altın, endeks ve dolar/TL haberlerinin son 2 günü. Başlıklar otomatik toplanır, etkisini yorumlamaz.</p>
+</section>
 
-<h2>Aylık katkının dağılımı</h2>
-<button id="p1">Sakin: altın 25, S&amp;P 60, nakit 15</button>
-<button id="p2">Hırslı: altın 15, S&amp;P 45, Nasdaq 25, nakit 15</button>
-<div class="grid" id="alloc"></div>
-<p id="sum" class="sub"></p>
-<div class="scroll"><table><thead><tr><th>Varlık</th><th>Oran</th><th>Aylık TL</th></tr></thead><tbody id="split"></tbody></table></div>
-
-<h2>Aylık seyir</h2>
-<div class="scroll"><table><thead><tr><th>Ay</th><th>Kur</th><th>Katkı ($)</th><th>Bakiye ($)</th></tr></thead><tbody id="rows"></tbody></table></div>
-
-<p class="note">Bu sayfa canlı piyasa verisi çekmez. Kur ve getiri senin girdiğin varsayımlardır, garanti değildir. Yatırım tavsiyesi değildir. Değerler bu tarayıcıda saklanır.</p>
+<p class="fine">Yatırım tavsiyesi değildir. Girdiğin tutarlar yalnızca bu tarayıcıda saklanır. Fiyatlar yaklaşık 15 dakika gecikmeli olabilir.</p>
 </main>
 <script>
 const $=id=>document.getElementById(id);
-const F=[['bal','Mevcut bakiye (TL)'],['con','Aylık katkı (TL)'],['k0','Aralık 2026 kuru'],['k1','Ağustos 2027 kuru'],['ret','Yıllık getiri, dolar (%)'],['tgt','Hedef ($)']];
-const A=[['gold','Altın (%)'],['sp','S&P 500 ETF (%)'],['qqq','Nasdaq-100 ETF (%)'],['cash','Nakit (%)']];
-const def={bal:10000,con:40000,k0:51,k1:59,ret:15,tgt:10000,gold:25,sp:60,qqq:0,cash:15};
-let st={...def};
-try{const s=JSON.parse(localStorage.getItem('midas')||'null');if(s)st={...def,...s}}catch(e){}
-const mk=(box,arr)=>{$(box).innerHTML=arr.map(([i,t])=>`<label>${t}<input id="${i}" type="number" inputmode="decimal" step="any" value="${st[i]}"></label>`).join('')};
-mk('inputs',F);mk('alloc',A);
-const months=['Ara 2026','Oca 2027','Şub 2027','Mar 2027','Nis 2027','May 2027','Haz 2027','Tem 2027','Ağu 2027'];
 const fm=(n,d=0)=>n.toLocaleString('tr-TR',{maximumFractionDigits:d,minimumFractionDigits:d});
-function run(c){const g=Math.pow(1+st.ret/100,1/12);let b=st.bal/st.k0,r=[];
-for(let m=0;m<9;m++){const k=st.k0+(st.k1-st.k0)*m/8;if(m>0)b*=g;const add=c/k;b+=add;r.push({k,add,b})}return r}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const K=['gold','eq','cash'],N={gold:'Altın',eq:'Hisse / ETF',cash:'Nakit'},COL={gold:'--gold',eq:'--acc',cash:'--cash'};
+const def={h:{gold:0,eq:0,cash:0},t:{gold:20,eq:65,cash:15}};
+let st={h:{...def.h},t:{...def.t}},D=null;
+try{const s=JSON.parse(localStorage.getItem('esat')||'null');if(s)st={h:{...def.h,...s.h},t:{...def.t,...s.t}}}catch(e){}
+const inp=(p,k,l,v)=>`<label>${l}<input id="${p}_${k}" type="number" inputmode="decimal" min="0" step="any" value="${v||''}"></label>`;
+$('hin').innerHTML=K.map(k=>inp('h',k,N[k]+' (elimdeki tutar)',st.h[k])).join('');
+$('tin').innerHTML=K.map(k=>inp('t',k,N[k]+' hedef',st.t[k])).join('');
+const ring=(r,v)=>{const C=2*Math.PI*r;let o=0;return v.map((x,i)=>{const l=C*x,s=`<circle cx="100" cy="100" r="${r}" fill="none" stroke="var(${COL[K[i]]})" stroke-width="18" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-o}" transform="rotate(-90 100 100)"/>`;o+=l;return s}).join('')};
+const track=r=>`<circle cx="100" cy="100" r="${r}" fill="none" stroke="var(--line)" stroke-width="18"/>`;
 function render(){
-Object.keys(def).forEach(i=>{const v=parseFloat($(i).value);st[i]=isFinite(v)?v:0});
-try{localStorage.setItem('midas',JSON.stringify(st))}catch(e){}
-const r=run(st.con),fin=r[8].b,pct=st.tgt>0?fin/st.tgt:0;
-$('head').textContent=`Ağustos 2027’de tahmini ${fm(fin)} $, hedefin %${fm(pct*100)}’i`;
-$('fill').style.width=Math.min(100,pct*100)+'%';
-const miss=st.tgt-fin;
-$('gap').textContent=miss>0?`Hedefe ${fm(miss)} $ eksik.`:'Bu varsayımlarla hedefe ulaşılıyor.';
-const base=run(0)[8].b,per=run(1)[8].b-base,need=per>0?Math.max(0,(st.tgt-base)/per):0;
-$('need').textContent=`Hedef için gereken aylık katkı yaklaşık ${fm(need)} TL (mevcut: ${fm(st.con)} TL).`;
-const sum=A.reduce((s,[i])=>s+st[i],0);
-$('sum').textContent=sum===100?'':`Oranların toplamı %${fm(sum)}, %100 olmalı.`;
-$('sum').className=sum===100?'sub':'sub warn';
-$('split').innerHTML=A.map(([i,t])=>`<tr><td>${t.replace(' (%)','')}</td><td>%${fm(st[i])}</td><td>${fm(st.con*st[i]/100)}</td></tr>`).join('');
-$('rows').innerHTML=r.map((x,m)=>`<tr><td>${months[m]}</td><td>${fm(x.k,2)}</td><td>${fm(x.add)}</td><td>${fm(x.b)}</td></tr>`).join('');
-}
-Object.keys(def).forEach(i=>$(i).addEventListener('input',render));
-const preset=o=>{Object.assign(st,o);A.forEach(([i])=>$(i).value=st[i]);render()};
-$('p1').onclick=()=>preset({gold:25,sp:60,qqq:0,cash:15});
-$('p2').onclick=()=>preset({gold:15,sp:45,qqq:25,cash:15});
+K.forEach(k=>{st.h[k]=Math.max(0,parseFloat($('h_'+k).value)||0);st.t[k]=Math.max(0,parseFloat($('t_'+k).value)||0)});
+try{localStorage.setItem('esat',JSON.stringify(st))}catch(e){}
+const tot=K.reduce((s,k)=>s+st.h[k],0),ts=K.reduce((s,k)=>s+st.t[k],0);
+const cur=K.map(k=>tot?st.h[k]/tot:0),tg=K.map(k=>ts?st.t[k]/ts:0);
+$('ring').innerHTML=(tot?ring(60,cur):track(60))+(ts?ring(86,tg):track(86))+`<text x="100" y="97" text-anchor="middle" fill="var(--mut)" font-size="9">Toplam</text><text x="100" y="115" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="600">${fm(tot)}</text>`;
+$('legend').innerHTML=K.map((k,i)=>{const d=tg[i]*tot-st.h[k];return `<tr><td><span class="dot" style="background:var(${COL[k]})"></span>${N[k]}</td><td>%${fm(cur[i]*100,1)}</td><td>%${fm(tg[i]*100,1)}</td><td>${tot?(d>=0?'+':'−')+fm(Math.abs(d)):'-'}</td></tr>`}).join('');
+$('tw').textContent=ts===100?'':`Hedeflerin toplamı %${fm(ts)}, %100 olmalı.`;
+signals(tot,cur,tg)}
+function signals(tot,cur,tg){
+const s=[],it=(D&&D.items)||{},dd=(x,h)=>(1-x.price/h)*100;
+if(it.gold){const a=dd(it.gold,it.gold.high30);if(a>=5)s.push(`Altın son 30 günlük zirveden %${fm(a,1)} düştü: alım bölgesi (nakit payından).`);else if(a<=2)s.push('Altın 30 günlük zirveye yakın: ek alım için acele etme.')}
+['sp','ndx'].forEach(k=>{const x=it[k];if(!x)return;const a=dd(x,x.high52);if(a>=10)s.push(`${x.name} 52 haftalık zirveden %${fm(a,1)} düştü: dip alım kuralı tetiklendi.`);else if(a<=3)s.push(`${x.name} zirveye yakın: ek alım için acele etme.`)});
+if(tot)K.forEach((k,i)=>{const d=(cur[i]-tg[i])*100;if(Math.abs(d)>=5)s.push(`${N[k]} hedefin ${fm(Math.abs(d),1)} puan ${d<0?'altında':'üstünde'}: dengeleme zamanı.`)});
+if(D)$('sig').innerHTML=s.length?s.map(t=>`<div>${esc(t)}</div>`).join(''):'Şu an tetiklenen kural yok.';
+$('mkt').innerHTML=Object.values(it).map(x=>`<div><div class="sub">${esc(x.name)}</div><strong>${fm(x.price,2)}</strong> <span style="color:var(${x.chg>=0?'--ok':'--bad'})">${x.chg>=0?'+':''}${fm(x.chg,2)}%</span><div class="sub">52 hf. zirveden %${fm(dd(x,x.high52),1)} aşağıda</div></div>`).join('')}
+['h','t'].forEach(p=>K.forEach(k=>$(p+'_'+k).addEventListener('input',render)));
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));document.querySelectorAll('.panel').forEach(p=>p.hidden=p.id!==b.dataset.t)});
 render();
-fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{
-const it=d.items,box=$('mkt');
-box.innerHTML=Object.values(it).map(x=>`<div><div class="sub">${x.name}</div><strong>${fm(x.price,2)}</strong> <span style="color:var(${x.chg>=0?'--ok':'--bad'})">${x.chg>=0?'+':''}${fm(x.chg,2)}%</span></div>`).join('');
-$('upd').textContent='Son güncelleme: '+new Date(d.updated).toLocaleString('tr-TR')+' (yaklaşık 15 dakika gecikmeli olabilir).';
-const al=[],dd=(x,h)=>(1-x.price/h)*100;
-if(it.gold&&dd(it.gold,it.gold.high30)>=5)al.push(`Altın son 30 günlük zirveden %${fm(dd(it.gold,it.gold.high30),1)} düştü: nakit payından alım bölgesi.`);
-['sp','ndx'].forEach(k=>{const x=it[k];if(x&&dd(x,x.high52)>=10)al.push(`${x.name} 52 haftalık zirveden %${fm(dd(x,x.high52),1)} düştü: dip alım kuralın tetiklendi.`)});
-$('alerts').innerHTML=al.length?al.map(t=>`<div>${t}</div>`).join(''):'Şu an tetiklenen kural yok. Aylık alımı planına göre yap.';
-}).catch(()=>{$('mkt').textContent='Canlı veri yok. data.json henüz oluşmadı, GitHub Actions’ı bir kez çalıştır.';$('alerts').textContent=''});
+fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;render();
+$('upd').textContent='Son güncelleme: '+new Date(d.updated).toLocaleString('tr-TR');
+$('news').innerHTML=(d.news&&d.news.length)?d.news.map(n=>`<div><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a><div class="sub">${esc(n.source)} · ${new Date(n.date).toLocaleDateString('tr-TR',{day:'numeric',month:'short'})}</div></div>`).join(''):'Şu an haber yok.'}).catch(()=>{$('sig').textContent='Canlı veri yok. Actions’ı bir kez çalıştır.';$('news').textContent='Canlı veri yok.'});
 </script></body></html>
