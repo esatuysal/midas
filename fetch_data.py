@@ -29,6 +29,20 @@ for key, (name, sym) in T.items():
     except Exception as e:
         print(key, "hata:", e)
 
+# Portföyünde olabilecek hisse/ETF'ler: istediğini ekle ya da çıkar
+EXTRA = ["VOO", "QQQ", "SPY", "IVV", "NVDA", "MSFT", "AAPL", "GOOGL"]
+out["quotes"] = {}
+for sym in EXTRA:
+    try:
+        h = yf.Ticker(sym).history(period="5d")["Close"].dropna()
+        out["quotes"][sym] = {
+            "name": sym,
+            "price": round(float(h.iloc[-1]), 2),
+            "chg": round(float(h.iloc[-1] / h.iloc[-2] - 1) * 100, 2),
+        }
+    except Exception as e:
+        print(sym, "hata:", e)
+
 seen = set()
 news = []
 for q in Q:
