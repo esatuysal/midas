@@ -1,8 +1,13 @@
 name: Veri güncelle
 on:
   schedule:
-    - cron: "*/30 * * * 1-5"
+    - cron: "*/15 * * * 0-5"
   workflow_dispatch:
+    inputs:
+      test:
+        description: "Telegram test mesajı gönder"
+        type: boolean
+        default: false
 permissions:
   contents: write
 jobs:
@@ -15,8 +20,14 @@ jobs:
           python-version: "3.12"
       - run: pip install yfinance
       - run: python fetch_data.py
+      - name: Uyarılar
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python alerts.py ${{ github.event.inputs.test == 'true' && '--test' || '' }}
       - run: |
           git config user.name "bot"
           git config user.email "bot@users.noreply.github.com"
-          git add data.json
+          git add data.json alerts_state.json
           git diff --cached --quiet || (git commit -m "veri guncelle" && git push)
