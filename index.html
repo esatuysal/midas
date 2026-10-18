@@ -17,7 +17,8 @@ main{max-width:720px;margin:0 auto;padding:28px 18px 56px}
 .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .big{cursor:pointer;user-select:none;font-size:clamp(2.4rem,11vw,3.8rem);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
 .sm{color:var(--gold);font-weight:600;margin-top:6px}
-.lead{font-size:1.15rem;margin:18px 0 6px}
+.cur{font-size:.5em;font-weight:600;color:var(--gold);margin-right:.12em;vertical-align:.45em}.seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:3px;margin-top:16px}.seg button{border:0;border-radius:99px;padding:6px 16px;color:var(--mut)}.seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 0 0 1px var(--gold) inset}
+.lead{font-size:1.15rem;margin:14px 0 6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;color:var(--mut);font-size:.88rem}
 .chips span{border:1px solid var(--line);border-radius:99px;padding:3px 12px}
 h2{font-size:1.25rem;font-weight:600;margin:44px 0 12px}
@@ -56,6 +57,7 @@ table{width:100%;border-collapse:collapse;margin-top:10px}td,th{text-align:right
 </svg>
 <div class="center"><div class="big" id="tot" role="button" tabindex="0" title="Dokun: $ ↔ ₺">$0</div><div class="sm" id="pc"></div></div>
 </div>
+<div class="seg" role="group" aria-label="Para birimi"><button id="cu" aria-pressed="true">$ Dolar</button><button id="ct" aria-pressed="false">₺ TL</button></div>
 <p class="lead" id="left"></p>
 <div class="chips" id="chips"></div>
 <p><button class="go" id="demo" hidden>Örnek portföyle dene</button></p>
@@ -116,7 +118,7 @@ return{u,g,gold,eq,cash,tot:gold+eq+cash}}
 function update(){const c=calc(),pct=st.tgt?c.tot/st.tgt:0,left=Math.max(0,st.tgt-c.tot);
 const days=Math.max(0,Math.ceil((END-new Date())/864e5));
 $('#arc').style.strokeDasharray=C;$('#arc').style.strokeDashoffset=C*(1-Math.min(1,pct));
-const tr=st.ccy==='TRY'&&c.u;tween(tr?c.tot*c.u:c.tot,tr?'₺':'$');$('#pc').textContent=`%${fm(pct*100,1)} · hedef ${tr?fm(st.tgt*c.u)+' ₺':fm(st.tgt)+' $'}`;
+const tr=st.ccy==='TRY'&&c.u;$('#cu').setAttribute('aria-pressed',!tr);$('#ct').setAttribute('aria-pressed',!!tr);tween(tr?c.tot*c.u:c.tot,tr?'₺':'$');$('#pc').textContent=`%${fm(pct*100,1)} · hedef ${tr?fm(st.tgt*c.u)+' ₺':fm(st.tgt)+' $'}`;
 $('#left').textContent=c.tot>=st.tgt?'Hedefe ulaştın.':(tr?`Hedefe ${fm(left*c.u)} ₺ kaldı (yaklaşık ${fm(left)} $), ${days} gün var.`:`Hedefe ${fm(left)} $ kaldı${c.u?` (yaklaşık ${fm(left*c.u)} TL)`:''}, ${days} gün var.`);
 $('#chips').innerHTML=[c.g&&c.u?`Gram altın ${fm(c.g*c.u)} TL`:'',c.u?`Dolar ${fm(c.u,2)} TL`:'',tag].filter(Boolean).map(t=>`<span>${esc(t)}</span>`).join('');
 $('#v_gram').textContent=c.g?`≈ ${fm(st.gram*c.g,2)} $${c.u?` · ${fm(st.gram*c.g*c.u)} TL`:''}`:'';
@@ -129,7 +131,7 @@ $('#leg').innerHTML=K.map(k=>`<div><span class="dot" style="background:${COL[k]}
 $('#tbl').innerHTML=K.map(k=>{const d=st.tg[k]/ts*T-v[k];return`<tr><td>${N[k]}</td><td>%${fm(T?v[k]/T*100:0,1)}</td><td>%${fm(st.tg[k]/ts*100,1)}</td><td>${T?(d>=0?'+':'−')+fm(Math.abs(d)):'-'}</td></tr>`}).join('');
 signals(T,v,ts);save()}
 function tween(to,sym='$'){const a=shown,t0=performance.now(),d=matchMedia('(prefers-reduced-motion:reduce)').matches||!first?0:1200;first=false;
-const f=n=>{const k=d?Math.min(1,(n-t0)/d):1,e=1-Math.pow(1-k,3);shown=a+(to-a)*e;$('#tot').textContent=sym+fm(shown);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+const f=n=>{const k=d?Math.min(1,(n-t0)/d):1,e=1-Math.pow(1-k,3);shown=a+(to-a)*e;$('#tot').innerHTML=`<span class="cur">${sym}</span>${fm(shown)}`,fit();if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 function signals(T,v,ts){const s=[],it=P,dd=(x,h)=>(1-x.price/h)*100;
 if(it.gold&&it.gold.high30){const a=dd(it.gold,it.gold.high30);if(a>=5)s.push(`Altın son 30 günlük zirveden %${fm(a,1)} düştü: alım bölgesi (nakit payından).`);else if(a<=2)s.push('Altın 30 günlük zirveye yakın: ek alım için acele etme.')}
 ['sp','ndx'].forEach(k=>{const x=it[k];if(!x||!x.high52)return;const a=dd(x,x.high52);if(a>=10)s.push(`${x.name} 52 haftalık zirveden %${fm(a,1)} düştü: dip alım kuralı tetiklendi.`);else if(a<=3)s.push(`${x.name} zirveye yakın: ek alım için acele etme.`)});
@@ -150,7 +152,9 @@ $('#add').onclick=()=>{st.pos.push({t:Q[0],q:0});renderPos();update()};
 $('#goal').onclick=()=>{const v=parseFloat((prompt('Hedef tutar ($):',st.tgt)||'').replace(',','.'));if(v>0){st.tgt=v;update()}};
 $('#copy').onclick=async()=>{const u=location.origin+location.pathname+'#d='+btoa(JSON.stringify(st));try{await navigator.clipboard.writeText(u);$('#copy').textContent='Kopyalandı'}catch(e){prompt('Bağlantı:',u)}};
 $('#demo').onclick=()=>{isDemo=true;Object.assign(st,{gram:8.5,tl:20000,usd:600,pos:[{t:'VOO',q:3.2},{t:'QQQ',q:1.4}]});$('#gram').value=8.5;$('#tl').value=20000;$('#usd').value=600;renderPos();update()};
-const flip=()=>{st.ccy=st.ccy==='TRY'?'USD':'TRY';shown=0;first=false;update()};
+function fit(){const el=$('#tot'),max=el.parentElement.clientWidth*0.66;el.style.fontSize='';let fs=parseFloat(getComputedStyle(el).fontSize);while(el.scrollWidth>max&&fs>18){fs-=2;el.style.fontSize=fs+'px'}}
+const setC=c=>{st.ccy=c;shown=0;first=false;update()},flip=()=>setC(st.ccy==='TRY'?'USD':'TRY');
+$('#cu').onclick=()=>setC('USD');$('#ct').onclick=()=>setC('TRY');
 $('#tot').onclick=flip;$('#tot').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
 renderPos();update();
 fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{load(d);live()}).catch(()=>{P=DEMO;tag='Örnek fiyatlar (canlı veri yok)';$('#sig').textContent='Canlı veri yok.';$('#news').textContent='Canlı veri yok.';update()});
